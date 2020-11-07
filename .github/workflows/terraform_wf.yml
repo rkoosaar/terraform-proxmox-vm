@@ -1,0 +1,26 @@
+name: terraform_wf
+
+on:
+  push:
+    branches:
+      - master
+jobs:
+  format:
+    runs-on: ubuntu-latest
+    name: Fix terraform file formatting
+    steps:
+      - name: Checking out the code
+        uses: actions/checkout@v2
+
+      - name: Running terraform-fmt
+        uses: dflook/terraform-fmt@v1
+        with:
+          path: ./
+
+      - name: Creating Pull Request (PR)
+        uses: peter-evans/create-pull-request@v2
+        with:
+          commit-message: terraform fmt
+          title: Reformat terraform files
+          body: Update terraform files to canonical format using `terraform fmt`
+          branch: automated-terraform-fmt
