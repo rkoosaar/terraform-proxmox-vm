@@ -172,7 +172,7 @@ variable "vga" {
     type   = string
     memory = number
   })
-  default     = null
+  default = null
 }
 
 variable "vm_network" {
@@ -188,8 +188,8 @@ variable "vm_network" {
     queues    = number
     link_down = bool
   }))
-  default     = [
-  {
+  default = [
+    {
       id        = 0
       model     = "virtio"
       macaddr   = null
@@ -199,7 +199,7 @@ variable "vm_network" {
       rate      = null
       queues    = null
       link_down = null
-  }
+    }
   ]
 }
 
@@ -224,7 +224,7 @@ variable "vm_disk" {
     mbps_wr      = number
     mbps_wr_max  = number
   }))
-  default     = []
+  default = []
 }
 
 variable "serial" {
@@ -233,7 +233,7 @@ variable "serial" {
     id   = string
     type = string
   })
-  default     = null
+  default = null
 }
 
 # Cloud Init Specific
