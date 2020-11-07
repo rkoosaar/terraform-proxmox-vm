@@ -1,0 +1,40 @@
+name: release_wf
+
+on:
+  workflow_run:
+    workflows: ["version_wf"]
+    types: 
+      - completed
+jobs:
+  release:
+    name: Creating a Release
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checking out the code
+        uses: actions/checkout@v2
+        with:
+          fetch-depth: 0
+
+      - name: Getting the Head Tag
+        run: echo "HEAD_TAG=$(git tag --points-at HEAD)" >> $GITHUB_ENV
+
+      - name: Showing the Head Tag
+        run: |
+          echo $HEAD_TAG
+
+      - name: Running only if tag exists
+        run: echo "This runs because Git tag points at HEAD ..."
+        if: env.HEAD_TAG != ''
+
+      - name: Creating a Release
+        uses: actions/create-release@v1
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          tag_name: ${{ env.HEAD_TAG }}
+          release_name: Release ${{ env.HEAD_TAG }}
+          body: |
+            Changes in this Release
+            - First Change
+          draft: false
+          prerelease: false
