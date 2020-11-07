@@ -26,7 +26,7 @@ resource "proxmox_vm_qemu" "vm_qemu" {
   sockets = var.sockets
   vcpus   = var.vcpus
   cpu     = var.cpu
-  
+
   numa    = var.numa
   hotplug = var.hotplug
   scsihw  = var.scsihw
@@ -37,7 +37,7 @@ resource "proxmox_vm_qemu" "vm_qemu" {
   preprovision = var.preprovision
 
   os_type = var.os_type
-  
+
   dynamic "vga" {
     for_each = var.vga == null ? [] : list(var.vga)
     content {
@@ -49,14 +49,14 @@ resource "proxmox_vm_qemu" "vm_qemu" {
   dynamic "network" {
     for_each = var.vm_network
     content {
-      id = network.value.id
-      model = network.value.model
-      macaddr = network.value.macaddr
-      bridge = network.value.bridge
-      tag = network.value.tag
-      firewall = network.value.firewall
-      rate = network.value.rate
-      queues = network.value.queues
+      id        = network.value.id
+      model     = network.value.model
+      macaddr   = network.value.macaddr
+      bridge    = network.value.bridge
+      tag       = network.value.tag
+      firewall  = network.value.firewall
+      rate      = network.value.rate
+      queues    = network.value.queues
       link_down = network.value.link_down
     }
   }
@@ -103,7 +103,7 @@ resource "proxmox_vm_qemu" "vm_qemu" {
   ciuser       = var.ciuser
   cipassword   = var.cipassword
   cicustom     = var.cicustom
-  nameserver = var.nameserver
+  nameserver   = var.nameserver
   searchdomain = var.searchdomain
   ipconfig0    = var.ipconfig0
   ipconfig1    = var.ipconfig1

@@ -23,7 +23,7 @@ module "prx_vm" {
   full_clone = true
 
   vm_network = [
-     {
+    {
       id        = 0
       model     = "virtio"
       macaddr   = null
@@ -37,7 +37,7 @@ module "prx_vm" {
   ]
 
   vm_disk = [
-  {
+    {
       id           = 0
       size         = 40
       type         = "scsi"
@@ -55,11 +55,11 @@ module "prx_vm" {
       mbps_wr_max  = null
       replicate    = null
       ssd          = null
-    }  
+    }
   ]
   # Cloud init specific
-  sshkeys = "ssh-ed25519 AAAAC3NzaC1l7faf6a69UIATUDABIBTrVBGFSDAGLRJ+JjqB0+bgaKW80W6bxv407PzS user@domain.name"
-  nameserver = "10.10.10.1"
+  sshkeys      = "ssh-ed25519 AAAAC3NzaC1l7faf6a69UIATUDABIBTrVBGFSDAGLRJ+JjqB0+bgaKW80W6bxv407PzS user@domain.name"
+  nameserver   = "10.10.10.1"
   searchdomain = "domain.name"
   #ipconfig0 = "ip=10.10.10.15${count.index + 1}/24,gw=10.10.10.1"
 
