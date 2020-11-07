@@ -9,41 +9,51 @@ Terraform module for creating and managing VM Qemu resources
 ## Examples
 
 ```
-locals {
-  ufr_src_firewall_group_ids = flatten([[module.unifi-fw-addressgroup.ufg-id], [], [module.unifi-fw-portgroup.ufg-id]])
-  ufr_src_network_id_format = element(module.unifi-net-vlan.un-id, 0)
+
+module "prx_vm" {
+  source = "../../modules/terraform-proxmox-vm"
+
+  vmid        = "7000"
+  name        = "test-vm-1"
+  target_node = "proxmox_server"
+
+  clone = "centos-x64-template"
+
+  os_type = "cloud-init"
+
+  agent      = 1
+  bios       = "ovmf"
+  boot       = "cdn"
+  bootdisk   = "scsi0"
+  cores      = 1
+  sockets    = "1"
+  cpu        = "host"
+  memory     = 1024
+  scsihw     = "virtio-scsi-pci"
+  onboot     = false
+  full_clone = true
+
+  vm_network = [
+     {
+      id        = 0
+      model     = "virtio"
+      macaddr   = null
+      bridge    = "vmbr0"
+      tag       = -1
+      firewall  = false
+      rate      = -1
+      queues    = -1
+      link_down = false
+    }
+  ]
+
+  # Cloud init specific
+  sshkeys = "ssh-ed25519 AAAAC3NzaC1l7faf6a69UIATUDABIBTrVBGFSDAGLRJ+JjqB0+bgaKW80W6bxv407PzS user@domain.name"
+  nameserver = "10.10.10.1"
+  searchdomain = "domain.name"
+  #ipconfig0 = "ip=10.10.10.15${count.index + 1}/24,gw=10.10.10.1"
 }
 
-module "unifi-fw-addressgroup" {
-  source = "../modules/terraform-unifi-controller"
-  ufg_enable  = true
-  ufg_name    = "UFG-ADDRESS-GROUP-TEST"
-  ufg_type    = "address-group"
-  ufg_members = ["10.16.15.227", "10.16.15.228"]
-}
-
-module "unifi-fw-portgroup" {
-  source = "../modules/terraform-unifi-controller"
-  ufg_enable  = true
-  ufg_name    = "UFG-PORT-GROUP-TEST"
-  ufg_type    = "port-group"
-  ufg_members = ["6007", "8006"]
-}
-
-module "unifi-fw-rule" {
-  source = "../modules/terraform-unifi-controller"
-  ufr_enable = true
-  # Required
-  ufr_name     = "UFR-RULE-TEST"
-  ufr_action   = "drop"
-  ufr_protocol = "tcp"
-  ufr_rule_index = "2016"
-  ufr_ruleset    = "LAN_IN" #type in GUI
-  # Optional - Source
-  ufr_src_firewall_group_ids = [] # use this if you want an any any rule
-  # Optional - Destination
-  ufr_dst_address = "10.16.80.227"
-}
 ```
 <!-- BEGINNING OF PRE-COMMIT-TERRAFORM DOCS HOOK -->
 ## Requirements
@@ -56,7 +66,7 @@ module "unifi-fw-rule" {
 
 | Name | Version |
 | --- | --- |
-| unifi | >= 2.6.2 |
+| proxmox | >= 2.6.2 |
 
 ## Inputs
 
