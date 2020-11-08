@@ -174,13 +174,13 @@ module "prx_vm" {
 
 **Got a question?**
 
-File a GitHub [issue](https://github.com/rkoosaar/terraform-unifi-controller/issues).
+File a GitHub [issue](https://github.com/rkoosaar/terraform-proxmox-vm/issues).
 
 ## Contributing
 
 ### Bug Reports & Feature Requests
 
-Please use the [issue tracker](https://github.com/rkoosaar/terraform-unifi-controller/issues) to report any bugs or file feature requests.
+Please use the [issue tracker](https://github.com/rkoosaar/terraform-proxmox-vm/issues) to report any bugs or file feature requests.
 
 ## Copyrights
 
@@ -193,4 +193,4 @@ Copyright © 2020 Raiko Koosaar
 [rkoosaar_homepage]: https://github.com/rkoosaar
 [rkoosaar_avatar]: https://github.com/rkoosaar.png?size=150
 [github]: https://github.com/rkoosaar
-[share_email]: mailto:?subject=terraform-unifi-controller&body=https://github.com/rkoosaar/terraform-unifi-controller
+[share_email]: mailto:?subject=terraform-proxmox-vm&body=https://github.com/rkoosaar/terraform-proxmox-vm
