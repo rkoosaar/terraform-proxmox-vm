@@ -24,7 +24,6 @@ module "prx_vm" {
 
   vm_network = [
     {
-      id        = 0
       model     = "virtio"
       macaddr   = null
       bridge    = "vmbr0"
@@ -38,12 +37,10 @@ module "prx_vm" {
 
   vm_disk = [
     {
-      id           = 0
       size         = 40
       type         = "scsi"
       format       = "raw"
       storage      = "pve-data"
-      storage_type = null
       backup       = null
       cache        = null
       discard      = null
@@ -55,6 +52,10 @@ module "prx_vm" {
       mbps_wr_max  = null
       replicate    = null
       ssd          = null
+      file = null
+      media = null
+      volume = null
+      slog = null
     }
   ]
   # Cloud init specific
