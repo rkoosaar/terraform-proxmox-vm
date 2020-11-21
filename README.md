@@ -35,7 +35,6 @@ module "prx_vm" {
 
   vm_network = [
      {
-      id        = 0
       model     = "virtio"
       macaddr   = null
       bridge    = "vmbr0"
@@ -114,7 +113,6 @@ module "prx_vm" {
 
 | Name | Description | Type | Required |
 | --- | --- | --- | --- |
-| id  | Defaults to 0 | `number` | no  |
 | model | Defaults to virtio | `string` | no  |
 | macaddr | Defaults to null | `string` | no  |
 | bridge | Defaults to vmbr0 | `string` | no  |
@@ -128,10 +126,8 @@ module "prx_vm" {
 
 | Name | Description | Type | Required |
 | --- | --- | --- | --- |
-| id  | Defaults to null | `string` | no  |
 | type | Defaults to null | `string` | no  |
 | storage | Defaults to null | `string` | no  |
-| storage_type | Defaults to null | `string` | no  |
 | size | Defaults to null | `number` | no  |
 | format | Defaults to null | `string` | no  |
 | cache | Defaults to null | `number` | no  |
@@ -145,6 +141,10 @@ module "prx_vm" {
 | mbps\_rd\_max | Defaults to null | `number` | no  |
 | mbps_wr | Defaults to null | `number` | no  |
 | mbps\_wr\_max | Defaults to null | `number` | no  |
+| file | Defaults to null | `string` | no  |
+| media | Defaults to null | `string` | no  |
+| volume | Defaults to null | `string` | no  |
+| slog | Defaults to null | `string` | no  |
 
 ### serial
 
