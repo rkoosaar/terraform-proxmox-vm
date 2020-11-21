@@ -49,7 +49,6 @@ resource "proxmox_vm_qemu" "vm_qemu" {
   dynamic "network" {
     for_each = var.vm_network
     content {
-      id        = network.value.id
       model     = network.value.model
       macaddr   = network.value.macaddr
       bridge    = network.value.bridge
@@ -64,10 +63,8 @@ resource "proxmox_vm_qemu" "vm_qemu" {
   dynamic "disk" {
     for_each = var.vm_disk
     content {
-      id           = disk.value.id
       type         = disk.value.type
       storage      = disk.value.storage
-      storage_type = disk.value.storage_type
       size         = disk.value.size
       format       = disk.value.format
       cache        = disk.value.cache
@@ -81,6 +78,10 @@ resource "proxmox_vm_qemu" "vm_qemu" {
       mbps_rd_max  = disk.value.mbps_rd_max
       mbps_wr      = disk.value.mbps_wr
       mbps_wr_max  = disk.value.mbps_wr_max
+      file = disk.value.file
+      media = disk.value.media
+      volume = disk.value.volume
+      slot = disk.value.slot
     }
   }
 
