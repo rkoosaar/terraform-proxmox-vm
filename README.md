@@ -65,7 +65,7 @@ module "prx_vm" {
 
 | Name | Version |
 | --- | --- |
-| proxmox | >= 2.6.2 |
+| proxmox | >= 2.6.5 |
 
 ## Inputs
 
