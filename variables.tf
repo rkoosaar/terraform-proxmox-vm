@@ -178,7 +178,6 @@ variable "vga" {
 variable "vm_network" {
   description = "(optional)"
   type = list(object({
-    id        = number
     model     = string
     macaddr   = string
     bridge    = string
@@ -190,7 +189,6 @@ variable "vm_network" {
   }))
   default = [
     {
-      id        = 0
       model     = "virtio"
       macaddr   = null
       bridge    = "vmbr0"
@@ -206,10 +204,8 @@ variable "vm_network" {
 variable "vm_disk" {
   description = "(optional) describe your variable"
   type = list(object({
-    id           = string
     type         = string
     storage      = string
-    storage_type = string
     size         = number
     format       = string
     cache        = number
@@ -223,6 +219,10 @@ variable "vm_disk" {
     mbps_rd_max  = number
     mbps_wr      = number
     mbps_wr_max  = number
+    file = string
+    media = string
+    volume = string
+    slog = string
   }))
   default = []
 }
