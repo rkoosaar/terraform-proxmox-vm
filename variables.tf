@@ -1,13 +1,7 @@
-variable "name" {
-  description = "Name of the VM"
-  type        = string
-  default     = null
-}
-
-variable "target_node" {
-  description = "Node to place the VM on"
-  type        = string
-  default     = null
+variable "vm_enable" {
+  type        = bool
+  description = "Enables or Disables VM creation. Defaults to false"
+  default     = false
 }
 
 variable "vmid" {
@@ -16,8 +10,26 @@ variable "vmid" {
   default     = null
 }
 
+variable "name" {
+  description = "Name of the VM"
+  type        = string
+  default     = null
+}
+
+variable "define_connection_info" {
+  description = "by default define SSH for provisioner info"
+  type        = bool
+  default     = true
+}
+
 variable "desc" {
   description = "Description of the VM"
+  type        = string
+  default     = null
+}
+
+variable "target_node" {
+  description = "Node to place the VM on"
   type        = string
   default     = null
 }
@@ -50,6 +62,12 @@ variable "agent" {
   description = "Defaults to 0"
   type        = number
   default     = 1
+}
+
+variable "guest_agent_ready_timeout" {
+  description = "Defaults to 600"
+  type        = number
+  default     = 600
 }
 
 variable "iso" {
@@ -124,6 +142,12 @@ variable "numa" {
   default     = false
 }
 
+variable "kvm" {
+  description = "Defaults to true"
+  type        = bool
+  default     = true
+}
+
 variable "hotplug" {
   description = "Defaults to network,disk,usb"
   type        = string
@@ -132,36 +156,6 @@ variable "hotplug" {
 
 variable "scsihw" {
   description = "Defaults to the empty string"
-  type        = string
-  default     = null
-}
-
-variable "pool" {
-  description = "Optional"
-  type        = string
-  default     = null
-}
-
-variable "force_create" {
-  description = "Defaults to true"
-  type        = string
-  default     = false
-}
-
-variable "clone_wait" {
-  description = "Optional"
-  type        = string
-  default     = null
-}
-
-variable "preprovision" {
-  description = "Defaults to true"
-  type        = string
-  default     = null
-}
-
-variable "os_type" {
-  description = "Which provisioning method to use, based on the OS type. Possible values: ubuntu, centos, cloud-init."
   type        = string
   default     = null
 }
@@ -201,19 +195,49 @@ variable "vm_network" {
   ]
 }
 
+variable "pool" {
+  description = "Optional"
+  type        = string
+  default     = null
+}
+
+variable "force_create" {
+  description = "Defaults to true"
+  type        = string
+  default     = false
+}
+
+variable "clone_wait" {
+  description = "Optional"
+  type        = string
+  default     = null
+}
+
+variable "preprovision" {
+  description = "Defaults to true"
+  type        = string
+  default     = null
+}
+
+variable "os_type" {
+  description = "Which provisioning method to use, based on the OS type. Possible values: ubuntu, centos, cloud-init."
+  type        = string
+  default     = null
+}
+
 variable "vm_disk" {
   description = "(optional) describe your variable"
   type = list(object({
     type         = string
     storage      = string
-    size         = number
+    size         = string
     format       = string
-    cache        = number
-    backup       = bool
-    ssd          = bool
+    cache        = string
+    backup       = number
+    iothread     = number
+    replicate    = number
+    ssd          = number
     discard      = string
-    iothread     = bool
-    replicate    = bool
     mbps         = number
     mbps_rd      = number
     mbps_rd_max  = number
@@ -222,7 +246,8 @@ variable "vm_disk" {
     file = string
     media = string
     volume = string
-    slog = string
+    slot = string
+    storage_type = string
   }))
   default = []
 }

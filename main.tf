@@ -1,10 +1,12 @@
 resource "proxmox_vm_qemu" "vm_qemu" {
-  count = "1"
+  count = var.vm_enable ? 1 : 0
 
-  name        = var.name
-  target_node = var.target_node
+  
   vmid        = var.vmid
+  name        = var.name
+  #def_con_info = var.define_connection_info
   desc        = var.desc
+  target_node = var.target_node
 
   bios     = var.bios
   onboot   = var.onboot
@@ -12,6 +14,7 @@ resource "proxmox_vm_qemu" "vm_qemu" {
   bootdisk = var.bootdisk
 
   agent = var.agent
+  #guest_agent_ready_timeout = var.guest_agent_ready_timeout
   iso   = var.iso
 
   clone      = var.clone
@@ -28,15 +31,9 @@ resource "proxmox_vm_qemu" "vm_qemu" {
   cpu     = var.cpu
 
   numa    = var.numa
+  kvm     = var.kvm
   hotplug = var.hotplug
   scsihw  = var.scsihw
-
-  pool         = var.pool
-  force_create = var.force_create
-  clone_wait   = var.clone_wait
-  preprovision = var.preprovision
-
-  os_type = var.os_type
 
   dynamic "vga" {
     for_each = var.vga == null ? [] : list(var.vga)
@@ -60,6 +57,13 @@ resource "proxmox_vm_qemu" "vm_qemu" {
     }
   }
 
+  pool         = var.pool
+  force_create = var.force_create
+  clone_wait   = var.clone_wait
+  preprovision = var.preprovision
+
+  os_type = var.os_type
+
   dynamic "disk" {
     for_each = var.vm_disk
     content {
@@ -82,6 +86,7 @@ resource "proxmox_vm_qemu" "vm_qemu" {
       media = disk.value.media
       volume = disk.value.volume
       slot = disk.value.slot
+      storage_type = disk.value.storage_type
     }
   }
 
