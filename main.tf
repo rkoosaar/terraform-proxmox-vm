@@ -113,4 +113,3 @@ resource "proxmox_vm_qemu" "vm_qemu" {
         ${var.sshkeys}
         EOF
 }
-
