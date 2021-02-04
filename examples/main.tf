@@ -23,41 +23,37 @@ module "prx_vm" {
   full_clone = true
 
   vm_network = [
-    {
+     {
+      id        = 0
       model     = "virtio"
-      macaddr   = null
       bridge    = "vmbr0"
-      tag       = -1
-      firewall  = false
-      rate      = -1
-      queues    = -1
-      link_down = false
+    },
+     {
+      id        = 1
+      model     = "virtio"
+      bridge    = "vmbr1"
+    }
+  ]
+  
+  vm_disk = [
+    {
+      type         = "scsi"
+      storage      = "pve-data"
+      size         = "32G"
+      format       = "qcow2"
+      file         = "7000/vm-7000-disk-1.qcow2"
+      volume       = "pve-data:7000/vm-7000-disk-1.qcow2"
+      slot         = 0
+    },
+    {
+      type         = "scsi"
+      storage      = "pve-data"
+      size         = "20G"
+      format       = "qcow2"
+      slot         = 1
     }
   ]
 
-  vm_disk = [
-    {
-      size         = 40
-      type         = "scsi"
-      format       = "raw"
-      storage      = "pve-data"
-      backup       = null
-      cache        = null
-      discard      = null
-      iothread     = null
-      mbps         = null
-      mbps_rd      = null
-      mbps_rd_max  = null
-      mbps_wr      = null
-      mbps_wr_max  = null
-      replicate    = null
-      ssd          = null
-      file = null
-      media = null
-      volume = null
-      slog = null
-    }
-  ]
   # Cloud init specific
   sshkeys      = "ssh-ed25519 AAAAC3NzaC1l7faf6a69UIATUDABIBTrVBGFSDAGLRJ+JjqB0+bgaKW80W6bxv407PzS user@domain.name"
   nameserver   = "10.10.10.1"

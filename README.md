@@ -35,14 +35,14 @@ module "prx_vm" {
 
   vm_network = [
      {
+      id        = 0
       model     = "virtio"
-      macaddr   = null
       bridge    = "vmbr0"
-      tag       = -1
-      firewall  = false
-      rate      = -1
-      queues    = -1
-      link_down = false
+    },
+     {
+      id        = 1
+      model     = "virtio"
+      bridge    = "vmbr1"
     }
   ]
 
@@ -65,7 +65,7 @@ module "prx_vm" {
 
 | Name | Version |
 | --- | --- |
-| proxmox | >= 2.6.5 |
+| proxmox | >= 2.6.7 |
 
 ## Inputs
 
@@ -136,15 +136,10 @@ module "prx_vm" {
 | discard | Defaults to null | `string` | no  |
 | iothread | Defaults to null | `bool` | no  |
 | replicate | Defaults to null | `bool` | no  |
-| mbps | Defaults to null | `number` | no  |
-| mbps_rd | Defaults to null | `number` | no  |
-| mbps\_rd\_max | Defaults to null | `number` | no  |
-| mbps_wr | Defaults to null | `number` | no  |
-| mbps\_wr\_max | Defaults to null | `number` | no  |
 | file | Defaults to null | `string` | no  |
 | media | Defaults to null | `string` | no  |
 | volume | Defaults to null | `string` | no  |
-| slog | Defaults to null | `string` | no  |
+| slot | Defaults to null | `string` | no  |
 
 ### serial
 
@@ -184,7 +179,7 @@ Please use the [issue tracker](https://github.com/rkoosaar/terraform-proxmox-vm/
 
 ## Copyrights
 
-Copyright © 2020 Raiko Koosaar
+Copyright © 2021 Raiko Koosaar
 
 ### Contributors
 
