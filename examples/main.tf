@@ -9,9 +9,9 @@ module "prx_vm" {
   target_node = "proxmox_server"
   desc        = "TEST Server"
 
-  clone       = "centos-x64-template"
+  clone = "centos-x64-template"
 
-  os_type     = "cloud-init"
+  os_type = "cloud-init"
 
   agent      = 1
   bios       = "ovmf"
@@ -28,61 +28,61 @@ module "prx_vm" {
   # vm_disk
   vm_disk = [
     {
-      type         = "scsi"
-      storage      = "pve-data"
-      size         = "32G"
-      format       = "qcow2"
-      file         = "7000/vm-7000-disk-1.qcow2"
-      volume       = "pve-data:7000/vm-7000-disk-1.qcow2"
-      slot         = 0
+      type    = "scsi"
+      storage = "pve-data"
+      size    = "32G"
+      format  = "qcow2"
+      file    = "7000/vm-7000-disk-1.qcow2"
+      volume  = "pve-data:7000/vm-7000-disk-1.qcow2"
+      slot    = 0
     },
     {
-      type         = "scsi"
-      storage      = "pve-data"
-      size         = "4M"
-      format       = "qcow2"
-      cache        = "none"
-      file         = "7000/vm-7000-cloudinit.qcow2"
-      media        = "cdrom"
-      volume       = "pve-data:7000/vm-7000-cloudinit.qcow2"
-      slot         = 1
+      type    = "scsi"
+      storage = "pve-data"
+      size    = "4M"
+      format  = "qcow2"
+      cache   = "none"
+      file    = "7000/vm-7000-cloudinit.qcow2"
+      media   = "cdrom"
+      volume  = "pve-data:7000/vm-7000-cloudinit.qcow2"
+      slot    = 1
     },
     {
-      type         = "scsi"
-      storage      = "iso-store"
-      size         = "7850M"
-      format       = "iso"
-      cache        = "none"
-      file         = "iso/CentOS-8.2.2004-x86_64-dvd1.iso"
-      media        = "cdrom"
-      volume       = "iso-store:iso/CentOS-8.2.2004-x86_64-dvd1.iso"
-      slot         = 2
+      type    = "scsi"
+      storage = "iso-store"
+      size    = "7850M"
+      format  = "iso"
+      cache   = "none"
+      file    = "iso/CentOS-8.2.2004-x86_64-dvd1.iso"
+      media   = "cdrom"
+      volume  = "iso-store:iso/CentOS-8.2.2004-x86_64-dvd1.iso"
+      slot    = 2
     },
     {
-      type         = "scsi"
-      storage      = "pve-data"
-      size         = "20G"
-      format       = "qcow2"
-      slot         = 3
+      type    = "scsi"
+      storage = "pve-data"
+      size    = "20G"
+      format  = "qcow2"
+      slot    = 3
     }
   ]
 
   # vm_network
   vm_network = [
-     {
-      id        = 0
-      model     = "virtio"
-      bridge    = "vmbr0"
+    {
+      id     = 0
+      model  = "virtio"
+      bridge = "vmbr0"
     },
-     {
-      id        = 1
-      model     = "virtio"
-      bridge    = "vmbr1"
+    {
+      id     = 1
+      model  = "virtio"
+      bridge = "vmbr1"
     },
-     {
-      id        = 2
-      model     = "virtio"
-      bridge    = "vmbr2"
+    {
+      id     = 2
+      model  = "virtio"
+      bridge = "vmbr2"
     }
   ]
 
