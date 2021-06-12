@@ -1,7 +1,7 @@
 module "prx_vm" {
   source = "../../modules/terraform-proxmox-vm"
 
-  #count       = "1"
+  #vm_enable       = "1"
   vmid        = "7000"
   name        = "test-vm-1"
   target_node = "proxmox_server"
