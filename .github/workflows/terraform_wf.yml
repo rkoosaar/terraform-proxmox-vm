@@ -18,7 +18,7 @@ jobs:
           path: ./
 
       - name: Creating Pull Request (PR)
-        uses: peter-evans/create-pull-request@v2
+        uses: peter-evans/create-pull-request@v3
         with:
           commit-message: terraform fmt
           title: Reformat terraform files
