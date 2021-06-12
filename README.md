@@ -72,13 +72,13 @@ module "prx_vm" {
 
 | Name | Version |
 | --- | --- |
-| terraform | >= 0.13 |
+| terraform | >= 1.0.0 |
 
 ## Providers
 
 | Name | Version |
 | --- | --- |
-| proxmox | >= 2.6.5 |
+| proxmox | >= 2.6.7 |
 
 ## Inputs
 
