@@ -8,50 +8,62 @@ Terraform module for creating and managing VM Qemu resources
 
 ## Examples
 
+Below is a small example. look in to example folder for more.
 ```
 
 module "prx_vm" {
   source = "../../modules/terraform-proxmox-vm"
 
+  # On or Off
+  vm_enable = true
+
   vmid        = "7000"
   name        = "test-vm-1"
   target_node = "proxmox_server"
+  desc        = "TEST Server"
 
-  clone = "centos-x64-template"
+  clone       = "centos-x64-template"
 
-  os_type = "cloud-init"
+  os_type     = "cloud-init"
 
   agent      = 1
   bios       = "ovmf"
-  boot       = "cdn"
+  boot       = "ncd"
   bootdisk   = "scsi0"
-  cores      = 1
+  cores      = 2
   sockets    = "1"
   cpu        = "host"
-  memory     = 1024
+  memory     = 768
   scsihw     = "virtio-scsi-pci"
   onboot     = false
   full_clone = true
 
+  # vm_disk
+  vm_disk = [
+    {
+      type         = "scsi"
+      storage      = "pve-data"
+      size         = "20G"
+      format       = "qcow2"
+      slot         = 3
+    }
+  ]
+
+  # vm_network
   vm_network = [
      {
       id        = 0
       model     = "virtio"
-      macaddr   = null
       bridge    = "vmbr0"
-      tag       = -1
-      firewall  = false
-      rate      = -1
-      queues    = -1
-      link_down = false
     }
   ]
 
   # Cloud init specific
-  sshkeys = "ssh-ed25519 AAAAC3NzaC1l7faf6a69UIATUDABIBTrVBGFSDAGLRJ+JjqB0+bgaKW80W6bxv407PzS user@domain.name"
-  nameserver = "10.10.10.1"
+  sshkeys      = "ssh-ed25519 AAAAC3NzaC1l7faf6a69UIATUDABIBTrVBGFSDAGLRJ+JjqB0+bgaKW80W6bxv407PzS user@domain.name"
+  nameserver   = "10.10.10.1"
   searchdomain = "domain.name"
   #ipconfig0 = "ip=10.10.10.15${count.index + 1}/24,gw=10.10.10.1"
+
 }
 
 ```
@@ -60,13 +72,13 @@ module "prx_vm" {
 
 | Name | Version |
 | --- | --- |
-| terraform | >= 0.13 |
+| terraform | >= 1.0.0 |
 
 ## Providers
 
 | Name | Version |
 | --- | --- |
-| proxmox | >= 2.6.2 |
+| proxmox | >= 2.6.7 |
 
 ## Inputs
 
@@ -114,7 +126,6 @@ module "prx_vm" {
 
 | Name | Description | Type | Required |
 | --- | --- | --- | --- |
-| id  | Defaults to 0 | `number` | no  |
 | model | Defaults to virtio | `string` | no  |
 | macaddr | Defaults to null | `string` | no  |
 | bridge | Defaults to vmbr0 | `string` | no  |
@@ -128,10 +139,8 @@ module "prx_vm" {
 
 | Name | Description | Type | Required |
 | --- | --- | --- | --- |
-| id  | Defaults to null | `string` | no  |
 | type | Defaults to null | `string` | no  |
 | storage | Defaults to null | `string` | no  |
-| storage_type | Defaults to null | `string` | no  |
 | size | Defaults to null | `number` | no  |
 | format | Defaults to null | `string` | no  |
 | cache | Defaults to null | `number` | no  |
@@ -145,6 +154,10 @@ module "prx_vm" {
 | mbps\_rd\_max | Defaults to null | `number` | no  |
 | mbps_wr | Defaults to null | `number` | no  |
 | mbps\_wr\_max | Defaults to null | `number` | no  |
+| file | Defaults to null | `string` | no  |
+| media | Defaults to null | `string` | no  |
+| volume | Defaults to null | `string` | no  |
+| slog | Defaults to null | `string` | no  |
 
 ### serial
 
@@ -184,7 +197,7 @@ Please use the [issue tracker](https://github.com/rkoosaar/terraform-proxmox-vm/
 
 ## Copyrights
 
-Copyright © 2020 Raiko Koosaar
+Copyright © 2021 Raiko Koosaar
 
 ### Contributors
 

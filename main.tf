@@ -1,10 +1,11 @@
 resource "proxmox_vm_qemu" "vm_qemu" {
-  count = "1"
+  count = var.vm_enable ? 1 : 0
 
-  name        = var.name
-  target_node = var.target_node
-  vmid        = var.vmid
+  vmid = var.vmid
+  name = var.name
+  #def_con_info = var.define_connection_info
   desc        = var.desc
+  target_node = var.target_node
 
   bios     = var.bios
   onboot   = var.onboot
@@ -12,7 +13,8 @@ resource "proxmox_vm_qemu" "vm_qemu" {
   bootdisk = var.bootdisk
 
   agent = var.agent
-  iso   = var.iso
+  guest_agent_ready_timeout = var.guest_agent_ready_timeout
+  iso = var.iso
 
   clone      = var.clone
   full_clone = var.full_clone
@@ -28,15 +30,9 @@ resource "proxmox_vm_qemu" "vm_qemu" {
   cpu     = var.cpu
 
   numa    = var.numa
+  kvm     = var.kvm
   hotplug = var.hotplug
   scsihw  = var.scsihw
-
-  pool         = var.pool
-  force_create = var.force_create
-  clone_wait   = var.clone_wait
-  preprovision = var.preprovision
-
-  os_type = var.os_type
 
   dynamic "vga" {
     for_each = var.vga == null ? [] : list(var.vga)
@@ -47,40 +43,44 @@ resource "proxmox_vm_qemu" "vm_qemu" {
   }
 
   dynamic "network" {
-    for_each = var.vm_network
+    for_each = local.vm_network
     content {
-      id        = network.value.id
-      model     = network.value.model
-      macaddr   = network.value.macaddr
-      bridge    = network.value.bridge
-      tag       = network.value.tag
-      firewall  = network.value.firewall
-      rate      = network.value.rate
-      queues    = network.value.queues
-      link_down = network.value.link_down
+      model     = lookup(network.value, "model", local.vm_network_default_model)
+      macaddr   = lookup(network.value, "macaddr", local.vm_network_default_macaddr)
+      bridge    = lookup(network.value, "bridge", local.vm_network_default_bridge)
+      tag       = lookup(network.value, "tag", local.vm_network_default_tag)
+      firewall  = lookup(network.value, "firewall", local.vm_network_default_firewall)
+      rate      = lookup(network.value, "rate", local.vm_network_default_rate)
+      queues    = lookup(network.value, "queues", local.vm_network_default_queues)
+      link_down = lookup(network.value, "link_down", local.vm_network_default_link_down)
     }
   }
 
+  pool         = var.pool
+  force_create = var.force_create
+  clone_wait   = var.clone_wait
+  preprovision = var.preprovision
+
+  os_type = var.os_type
+
   dynamic "disk" {
-    for_each = var.vm_disk
+    for_each = local.vm_disk
     content {
-      id           = disk.value.id
-      type         = disk.value.type
-      storage      = disk.value.storage
-      storage_type = disk.value.storage_type
-      size         = disk.value.size
-      format       = disk.value.format
-      cache        = disk.value.cache
-      backup       = disk.value.backup
-      iothread     = disk.value.iothread
-      replicate    = disk.value.replicate
-      ssd          = disk.value.ssd
-      discard      = disk.value.discard
-      mbps         = disk.value.mbps
-      mbps_rd      = disk.value.mbps_rd
-      mbps_rd_max  = disk.value.mbps_rd_max
-      mbps_wr      = disk.value.mbps_wr
-      mbps_wr_max  = disk.value.mbps_wr_max
+      type         = lookup(disk.value, "type", local.vm_disk_default_type)
+      storage      = lookup(disk.value, "storage", local.vm_disk_default_storage)
+      size         = lookup(disk.value, "size", local.vm_disk_default_size)
+      format       = lookup(disk.value, "format", local.vm_disk_default_format)
+      cache        = lookup(disk.value, "cache", local.vm_disk_default_cache)
+      backup       = lookup(disk.value, "backup", local.vm_disk_default_backup)
+      iothread     = lookup(disk.value, "iothread", local.vm_disk_default_iothread)
+      replicate    = lookup(disk.value, "replicate", local.vm_disk_default_replicate)
+      ssd          = lookup(disk.value, "ssd", local.vm_disk_default_ssd)
+      discard      = lookup(disk.value, "discard", local.vm_disk_default_discard)
+      file         = lookup(disk.value, "file", local.vm_disk_default_file)
+      media        = lookup(disk.value, "media", local.vm_disk_default_media)
+      volume       = lookup(disk.value, "volume", local.vm_disk_default_volume)
+      slot         = lookup(disk.value, "slot", local.vm_disk_default_slot)
+      storage_type = lookup(disk.value, "storage_type", local.vm_disk_default_storage_type)
     }
   }
 
@@ -92,10 +92,11 @@ resource "proxmox_vm_qemu" "vm_qemu" {
     }
   }
 
+  # these may need to be adjusted
   lifecycle {
-    ignore_changes = [
-      network,
-    ]
+    ignore_changes  = [network,disk,ciuser]
+  //create_before_destroy = false
+  //prevent_destroy = false
   }
 
   # for Cloud-init Settings.
@@ -113,4 +114,3 @@ resource "proxmox_vm_qemu" "vm_qemu" {
         ${var.sshkeys}
         EOF
 }
-
