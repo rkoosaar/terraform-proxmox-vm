@@ -149,15 +149,10 @@ module "prx_vm" {
 | discard | Defaults to null | `string` | no  |
 | iothread | Defaults to null | `bool` | no  |
 | replicate | Defaults to null | `bool` | no  |
-| mbps | Defaults to null | `number` | no  |
-| mbps_rd | Defaults to null | `number` | no  |
-| mbps\_rd\_max | Defaults to null | `number` | no  |
-| mbps_wr | Defaults to null | `number` | no  |
-| mbps\_wr\_max | Defaults to null | `number` | no  |
 | file | Defaults to null | `string` | no  |
 | media | Defaults to null | `string` | no  |
 | volume | Defaults to null | `string` | no  |
-| slog | Defaults to null | `string` | no  |
+| slot | Defaults to null | `string` | no  |
 
 ### serial
 
