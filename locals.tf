@@ -27,7 +27,7 @@ locals {
   vm_network_default_rate      = var.vm_network_default_rate
   vm_network_default_queues    = var.vm_network_default_queues
   vm_network_default_link_down = var.vm_network_default_link_down
- 
+
   # lifecycle - not in use
   // vm_lifecycle {
   //   ignore_changes = var.ignore_changes

@@ -12,9 +12,9 @@ resource "proxmox_vm_qemu" "vm_qemu" {
   boot     = var.boot
   bootdisk = var.bootdisk
 
-  agent = var.agent
+  agent                     = var.agent
   guest_agent_ready_timeout = var.guest_agent_ready_timeout
-  iso = var.iso
+  iso                       = var.iso
 
   clone      = var.clone
   full_clone = var.full_clone
@@ -94,9 +94,9 @@ resource "proxmox_vm_qemu" "vm_qemu" {
 
   # these may need to be adjusted
   lifecycle {
-    ignore_changes  = [network,disk,ciuser]
-  //create_before_destroy = false
-  //prevent_destroy = false
+    ignore_changes = [network, disk, ciuser]
+    //create_before_destroy = false
+    //prevent_destroy = false
   }
 
   # for Cloud-init Settings.
