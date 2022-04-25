@@ -1,10 +1,10 @@
 resource "proxmox_vm_qemu" "vm_qemu" {
   count = var.vm_enable ? 1 : 0
 
-  name = var.name
-  target_node = var.target_node
-  vmid = var.vmid
-  desc        = var.desc
+  name                   = var.name
+  target_node            = var.target_node
+  vmid                   = var.vmid
+  desc                   = var.desc
   define_connection_info = var.define_connection_info
 
   bios     = var.bios
@@ -14,9 +14,9 @@ resource "proxmox_vm_qemu" "vm_qemu" {
   boot     = var.boot
   bootdisk = var.bootdisk
 
-  agent = var.agent
-  iso = var.iso
-  pxe = var.pxe
+  agent      = var.agent
+  iso        = var.iso
+  pxe        = var.pxe
   clone      = var.clone
   full_clone = var.full_clone
 
@@ -37,32 +37,32 @@ resource "proxmox_vm_qemu" "vm_qemu" {
   hotplug = var.hotplug
   scsihw  = var.scsihw
 
-  pool         = var.pool
-  tags         = var.tags
-  force_create = var.force_create
-  os_type = var.os_type
+  pool                        = var.pool
+  tags                        = var.tags
+  force_create                = var.force_create
+  os_type                     = var.os_type
   force_recreate_on_change_of = var.force_recreate_on_change_of
-  os_network_config = var.os_network_config
-  
-  ssh_forward_ip    = var.ssh_forward_ip
-  ssh_user          = var.ssh_user
-  ssh_private_key   = var.ssh_private_key
-  
+  os_network_config           = var.os_network_config
+
+  ssh_forward_ip  = var.ssh_forward_ip
+  ssh_user        = var.ssh_user
+  ssh_private_key = var.ssh_private_key
+
   # for Cloud-init Settings.
-  ci_wait      = var.ci_wait
-  ciuser       = var.ciuser
-  cipassword   = var.cipassword
-  cicustom     = var.cicustom
-  searchdomain = var.searchdomain
-  nameserver   = var.nameserver
-  sshkeys = <<EOF
+  ci_wait          = var.ci_wait
+  ciuser           = var.ciuser
+  cipassword       = var.cipassword
+  cicustom         = var.cicustom
+  searchdomain     = var.searchdomain
+  nameserver       = var.nameserver
+  sshkeys          = <<EOF
         ${var.sshkeys}
         EOF
-  ipconfig0    = var.ipconfig0
-  ipconfig1    = var.ipconfig1
-  ipconfig2    = var.ipconfig2
-  ipconfig3    = var.ipconfig3
-  ipconfig4    = var.ipconfig4
+  ipconfig0        = var.ipconfig0
+  ipconfig1        = var.ipconfig1
+  ipconfig2        = var.ipconfig2
+  ipconfig3        = var.ipconfig3
+  ipconfig4        = var.ipconfig4
   automatic_reboot = var.automatic_reboot
 
 
@@ -124,17 +124,17 @@ resource "proxmox_vm_qemu" "vm_qemu" {
   dynamic "usb" {
     for_each = var.usb == null ? [] : list(var.usb)
     content {
-      host   = usb.value.host
+      host = usb.value.host
       usb3 = usb.value.usb3
     }
   }
 
   # these may need to be adjusted
   lifecycle {
-    ignore_changes  = [network,ciuser]
-  // ignore_changes  = [network,disk,ciuser]
-  //create_before_destroy = false
-  //prevent_destroy = false
+    ignore_changes = [network, ciuser]
+    // ignore_changes  = [network,disk,ciuser]
+    //create_before_destroy = false
+    //prevent_destroy = false
   }
 
 }
