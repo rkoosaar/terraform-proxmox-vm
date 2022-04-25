@@ -502,7 +502,7 @@ variable "serial" {
 variable "usb" {
   description = "The usb block is used to configure USB devices."
   type = object({
-    host   = string
+    host = string
     usb3 = bool
   })
   default = null
