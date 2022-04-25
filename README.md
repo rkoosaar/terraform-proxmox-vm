@@ -31,7 +31,7 @@ module "prx_vm" {
   boot       = "cdn"
   bootdisk  = "scsi0"
   agent      = 1
-  iso         = "iso-store:iso/debian-11.0.0-amd64-netinst.iso"
+  iso         = "pve-data:iso/debian-11.0.0-amd64-netinst.iso"
   #pxe         = false
   #clone       = "centos-x64-template"
   full_clone = false
@@ -55,13 +55,13 @@ module "prx_vm" {
   vm_disk = [
     {
       type         = "scsi"
-      storage      = "vDisks"
+      storage      = "pve-data"
       size         = "40G"
       format       = "qcow2"
     },
     {
       type         = "scsi"
-      storage      = "vDisks"
+      storage      = "pve-data"
       size         = "20G"
       format       = "qcow2"
     }
