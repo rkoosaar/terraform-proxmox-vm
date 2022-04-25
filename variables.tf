@@ -4,22 +4,22 @@ variable "vm_enable" {
   default     = false
 }
 
-variable "vmid" {
-  description = "ID of the VM in Proxmox, defaults to next number in the sequence"
-  type        = string
-  default     = null
-}
-
 variable "name" {
-  description = "Name of the VM"
+  description = "Required The name of the VM within Proxmox."
   type        = string
   default     = null
 }
 
-variable "define_connection_info" {
-  description = "by default define SSH for provisioner info"
-  type        = bool
-  default     = true
+variable "target_node" {
+  description = "Required The name of the Proxmox Node on which to place the VM."
+  type        = string
+  default     = null
+}
+
+variable "vmid" {
+  description = "The ID of the VM in Proxmox. The default value of 0 indicates it should use the next available ID in the sequence"
+  type        = number
+  default     = 0
 }
 
 variable "desc" {
@@ -28,32 +28,44 @@ variable "desc" {
   default     = null
 }
 
-variable "target_node" {
-  description = "Node to place the VM on"
-  type        = string
-  default     = null
+variable "define_connection_info" {
+  description = "Whether to let terraform define the (SSH) connection parameters for preprovisioners. Defaults to true"
+  type        = bool
+  default     = true
 }
 
 variable "bios" {
-  description = "Defaults to seabios"
+  description = "The BIOS to use, options are seabios or ovmf for UEFI. Defaults to seabios"
   type        = string
   default     = "seabios"
 }
 
 variable "onboot" {
-  description = "Defaults to true"
+  description = "	Whether to have the VM startup after the PVE node starts. Defaults to false"
+  type        = bool
+  default     = false
+}
+
+variable "oncreate" {
+  description = "Whether to have the VM startup after the VM is created. Defaults to true"
+  type        = bool
+  default     = true
+}
+
+variable "tablet" {
+  description = "	Enable/disable the USB tablet device. This device is usually needed to allow absolute mouse positioning with VNC. Defaults to true"
   type        = bool
   default     = true
 }
 
 variable "boot" {
-  description = "Defaults to cdn"
+  description = "The boot order for the VM.  Options: floppy (a), hard disk (c), CD-ROM (d), or network (n). Defaults to cdn"
   type        = string
   default     = "cdn"
 }
 
 variable "bootdisk" {
-  description = "Defaults to true"
+  description = "Enable booting from specified disk. Defaults to true"
   type        = string
   default     = "true"
 }
@@ -61,83 +73,89 @@ variable "bootdisk" {
 variable "agent" {
   description = "Defaults to 0"
   type        = number
-  default     = 1
-}
-
-variable "guest_agent_ready_timeout" {
-  description = "Defaults to 600"
-  type        = number
-  default     = 60
+  default     = 0
 }
 
 variable "iso" {
-  description = "Optional"
+  description = "The name of the ISO image to mount to the VM. Either clone or iso needs to be set"
   type        = string
   default     = null
 }
 
+variable "pxe" {
+  description = "If set to true, enable PXE boot of the VM. Also requires a boot order be set with Network first"
+  type        = bool
+  default     = null
+}
+
 variable "clone" {
-  description = "Optional"
+  description = "The base VM from which to clone to create the new VM. Note that clone is mutually exclussive with pxe and iso modes"
   type        = string
   default     = null
 }
 
 variable "full_clone" {
-  description = "Optional"
+  description = "Set to true to create a full clone, or false to create a linked clone. Only applies when clone is set"
   type        = bool
   default     = true
 }
 
 variable "hastate" {
-  description = "Optional"
+  description = "Requested HA state for the resource. One of started, stopped, enabled, disabled, or ignored"
+  type        = string
+  default     = null
+}
+
+variable "hagroup" {
+  description = "The HA group identifier the resource belongs to (requires hastate to be set!)"
   type        = string
   default     = null
 }
 
 variable "qemu_os" {
-  description = "Defaults to l26"
+  description = "The type of OS in the guest. Set properly to allow Proxmox to enable optimizations for the appropriate guest OS. Defaults to l26"
   type        = string
   default     = "l26"
 }
 
 variable "memory" {
-  description = "Defaults to 512"
+  description = "The amount of memory to allocate to the VM in Megabytes. Defaults to 512"
   type        = number
   default     = 512
 }
 
 variable "balloon" {
-  description = "Defaults to 0"
+  description = "The minimum amount of memory to allocate to the VM in Megabytes, when Automatic Memory Allocation is desired. Defaults to 0"
   type        = number
   default     = 0
 }
 
-variable "cores" {
-  description = "Defaults to 1"
+variable "sockets" {
+  description = "The number of CPU sockets to allocate to the VM. Defaults to 1"
   type        = number
   default     = 1
 }
 
-variable "sockets" {
-  description = "Defaults to 1"
+variable "cores" {
+  description = "The number of CPU cores per CPU socket to allocate to the VM. Defaults to 1"
   type        = number
   default     = 1
 }
 
 variable "vcpus" {
-  description = "Defaults to 1"
+  description = "The number of vCPUs plugged into the VM when it starts. If 0, this is set automatically by Proxmox to sockets * cores. Defaults to 0"
   type        = number
-  default     = 1
+  default     = 0
 }
 
 variable "cpu" {
-  description = "Defaults to host"
+  description = "The type of CPU to emulate in the Guest. Defaults to host"
   type        = string
   default     = "host"
 }
 
 variable "numa" {
-  description = "Defaults to false"
+  description = "Whether to enable Non-Uniform Memory Access in the guest. Defaults to false"
   type        = bool
   default     = false
 }
@@ -149,19 +167,157 @@ variable "kvm" {
 }
 
 variable "hotplug" {
-  description = "Defaults to network,disk,usb"
+  description = "Comma delimited list of hotplug features to enable. Options: network, disk, cpu, memory, usb. Set to 0 to disable hotplug. Defaults to network,disk,usb"
   type        = string
   default     = "network,disk,usb"
 }
 
 variable "scsihw" {
-  description = "Defaults to the empty string"
+  description = "The SCSI controller to emulate. Options: lsi, lsi53c810, megasas, pvscsi, virtio-scsi-pci, virtio-scsi-single. Defaults to lsi"
+  type        = string
+  default     = "lsi"
+}
+
+
+variable "pool" {
+  description = "The resource pool to which the VM will be added. Optional"
   type        = string
   default     = null
 }
 
+variable "tags" {
+  description = "	Tags of the VM. This is only meta information. Optional"
+  type        = string
+  default     = null
+}
+
+variable "force_create" {
+  description = "If false, and a vm of the same name, on the same node exists, terraform will attempt to reconfigure that VM with these settings. Set to true to always create a new VM. Defaults to true"
+  type        = string
+  default     = false
+}
+
+variable "os_type" {
+  description = "Which provisioning method to use, based on the OS type. Possible values: ubuntu, centos, cloud-init."
+  type        = string
+  default     = null
+}
+
+# An example where this is useful is a cloudinit configuration (as the cicustom attribute points to a file not the content).
+variable "force_recreate_on_change_of" {
+  description = "If the value of this string changes, the VM will be recreated. Useful for allowing this resource to be recreated when arbitrary attributes change"
+  type        = string
+  default     = null
+}
+
+# os_network_config
+variable "os_network_config" {
+  description = "Only applies when define_connection_info is true."
+  type        = string
+  default     = null
+}
+
+variable "ssh_forward_ip" {
+  description = "Only applies when define_connection_info is true. The IP (and optional colon separated port), to use to connect to the host for preprovisioning. If using cloud-init, this can be left blank"
+  type        = string
+  default     = null
+}
+
+variable "ssh_user" {
+  description = "Only applies when define_connection_info is true. The user with which to connect to the guest for preprovisioning. Forces re-creation on change"
+  type        = string
+  default     = null
+}
+
+variable "ssh_private_key" {
+  description = "Only applies when define_connection_info is true. The private key to use when connecting to the guest for preprovisioning. Sensitive"
+  type        = string
+  default     = null
+}
+
+# Cloud Init Specific
+
+variable "ci_wait" {
+  description = "How to long in seconds to wait for before provisioning. Defaults to 30"
+  type        = number
+  default     = 30
+}
+
+variable "ciuser" {
+  description = "Override the default cloud-init user for provisioning"
+  type        = string
+  default     = null
+}
+
+variable "cipassword" {
+  description = "Override the default cloud-init user's password. Sensitive"
+  type        = string
+  default     = null
+}
+
+variable "cicustom" {
+  description = "Instead specifying ciuser, cipasword, etc... you can specify the path to a custom cloud-init config file here. Grants more flexibility in configuring cloud-init"
+  type        = string
+  default     = null
+}
+
+variable "searchdomain" {
+  description = "Sets default DNS search domain suffix."
+  type        = string
+  default     = null
+}
+
+variable "nameserver" {
+  description = "Sets default DNS server for guest"
+  type        = string
+  default     = null
+}
+
+variable "sshkeys" {
+  description = "Newline delimited list of SSH public keys to add to authorized keys file for the cloud-init user"
+  type        = string
+  default     = ""
+}
+
+variable "ipconfig0" {
+  description = "The first IP address to assign to the guest. Format: [gw=<GatewayIPv4>] [,gw6=<GatewayIPv6>] [,ip=<IPv4Format/CIDR>] [,ip6=<IPv6Format/CIDR>]"
+  type        = string
+  default     = null
+}
+
+variable "ipconfig1" {
+  description = "The second IP address to assign to the guest. Same format as ipconfig0"
+  type        = string
+  default     = null
+}
+
+variable "ipconfig2" {
+  description = "The third IP address to assign to the guest. Same format as ipconfig0"
+  type        = string
+  default     = null
+}
+
+variable "ipconfig3" {
+  description = "The third IP address to assign to the guest. Same format as ipconfig0"
+  type        = string
+  default     = null
+}
+
+variable "ipconfig4" {
+  description = "The third IP address to assign to the guest. Same format as ipconfig0"
+  type        = string
+  default     = null
+}
+
+variable "automatic_reboot" {
+  description = "Automatically reboot the VM when parameter changes require this. If disabled the provider will emit a warning when the VM needs to be rebooted."
+  type        = bool
+  default     = true
+}
+
+
 variable "vga" {
-  description = "(optional)"
+  description = "The vga block is used to configure the display device."
   type = object({
     type   = string
     memory = number
@@ -216,36 +372,6 @@ variable "vm_network_default_link_down" {
   description = "Whether this interface should be disconnected (like pulling the plug)"
   type        = bool
   default     = false
-}
-
-variable "pool" {
-  description = "Optional"
-  type        = string
-  default     = null
-}
-
-variable "force_create" {
-  description = "Defaults to true"
-  type        = string
-  default     = false
-}
-
-variable "clone_wait" {
-  description = "Optional"
-  type        = string
-  default     = null
-}
-
-variable "preprovision" {
-  description = "Defaults to true"
-  type        = string
-  default     = null
-}
-
-variable "os_type" {
-  description = "Which provisioning method to use, based on the OS type. Possible values: ubuntu, centos, cloud-init."
-  type        = string
-  default     = null
 }
 
 # vm_disk variables
@@ -310,6 +436,36 @@ variable "vm_disk_default_discard" {
   default     = null
 }
 
+variable "vm_disk_default_mbps" {
+  description = "Maximum r/w speed in megabytes per second. 0 means unlimited."
+  type        = number
+  default     = null
+}
+
+variable "vm_disk_default_mbps_rd" {
+  description = "Maximum read speed in megabytes per second. 0 means unlimited."
+  type        = number
+  default     = null
+}
+
+variable "vm_disk_default_mbps_rd_max" {
+  description = "Maximum read speed in megabytes per second. 0 means unlimited."
+  type        = number
+  default     = null
+}
+
+variable "vm_disk_default_mbps_wr" {
+  description = "Maximum write speed in megabytes per second. 0 means unlimited."
+  type        = number
+  default     = null
+}
+
+variable "vm_disk_default_mbps_wr_max" {
+  description = "Maximum throttled write pool in megabytes per second. 0 means unlimited."
+  type        = number
+  default     = null
+}
+
 variable "vm_disk_default_file" {
   description = "The filename portion of the path to the drive’s backing volume. You shouldn't need to specify this, use the storage parameter instead"
   type        = string
@@ -328,12 +484,6 @@ variable "vm_disk_default_volume" {
   default     = null
 }
 
-variable "vm_disk_default_slot" {
-  description = "Not Sure what this is used for. Do not use"
-  type        = number
-  default     = null
-}
-
 variable "vm_disk_default_storage_type" {
   description = "The type of pool that storage is backed by. You shouldn't need to specify this, use the storage parameter instead"
   type        = string
@@ -341,7 +491,7 @@ variable "vm_disk_default_storage_type" {
 }
 
 variable "serial" {
-  description = "(optional)"
+  description = "Create a serial device inside the VM (up to a maximum of 4 can be specified)"
   type = object({
     id   = string
     type = string
@@ -349,67 +499,15 @@ variable "serial" {
   default = null
 }
 
-# Cloud Init Specific
-
-variable "nameserver" {
-  description = "(optional)"
-  type        = string
-  default     = null
+variable "usb" {
+  description = "The usb block is used to configure USB devices."
+  type = object({
+    host   = string
+    usb3 = bool
+  })
+  default = null
 }
 
-variable "searchdomain" {
-  description = "(optional)"
-  type        = string
-  default     = null
-}
-
-variable "ipconfig0" {
-  description = "(optional)"
-  type        = string
-  default     = null
-}
-
-variable "ipconfig1" {
-  description = "(optional)"
-  type        = string
-  default     = null
-}
-
-variable "ipconfig2" {
-  description = "(optional)"
-  type        = string
-  default     = null
-}
-
-variable "ci_wait" {
-  description = "(optional)"
-  type        = string
-  default     = null
-}
-
-variable "ciuser" {
-  description = "(optional)"
-  type        = string
-  default     = null
-}
-
-variable "cipassword" {
-  description = "(optional)"
-  type        = string
-  default     = null
-}
-
-variable "cicustom" {
-  description = "(optional)"
-  type        = string
-  default     = null
-}
-
-variable "sshkeys" {
-  description = "sshkeys"
-  type        = string
-  default     = ""
-}
 
 # lifecycle variables - currently not in use
 // variable "ignore_changes" {

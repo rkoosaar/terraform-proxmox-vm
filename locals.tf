@@ -11,10 +11,15 @@ locals {
   vm_disk_default_replicate    = var.vm_disk_default_replicate
   vm_disk_default_ssd          = var.vm_disk_default_ssd
   vm_disk_default_discard      = var.vm_disk_default_discard
+  vm_disk_default_mbps         = var.vm_disk_default_mbps
+  vm_disk_default_mbps_rd      = var.vm_disk_default_mbps_rd
+  vm_disk_default_mbps_rd_max  = var.vm_disk_default_mbps_rd_max
+  vm_disk_default_mbps_wr      = var.vm_disk_default_mbps_wr
+  vm_disk_default_mbps_wr_max  = var.vm_disk_default_mbps_wr_max
+
   vm_disk_default_file         = var.vm_disk_default_file
   vm_disk_default_media        = var.vm_disk_default_media
   vm_disk_default_volume       = var.vm_disk_default_volume
-  vm_disk_default_slot         = var.vm_disk_default_slot
   vm_disk_default_storage_type = var.vm_disk_default_storage_type
 
   # vm_network
